@@ -26,6 +26,18 @@
     </b-form-group>
 
     <b-form-group
+      id=displayInputGroup
+      label="Display:"
+      label-for="displayInput"
+    >
+      <b-form-select
+        id=displayInput
+        :options="displays"
+        required
+        v-model="modalData.display"/>
+    </b-form-group>
+
+    <b-form-group
       id=unitInputGroup
       label="Unit:"
       label-for="unitInput"
@@ -77,8 +89,13 @@ export default {
         label: '',
         source: '',
         unit: '',
-        color: ''
+        display: ''
+        // color: ''
       },
+      displays: [
+        'Area chart',
+        'Gauge'
+      ],
       db_: null
     }
   },
@@ -95,7 +112,8 @@ export default {
         this.modalData = {
           label: '',
           source: '',
-          unit: ''
+          unit: '',
+          display: ''
           // color: ''
         }
       } catch (error) {

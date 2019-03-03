@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'AreaChart',
+  name: 'ApexAreaChart',
   props: {
     options: {
       type: Object,

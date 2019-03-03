@@ -13,7 +13,12 @@
         <b-button variant=outline-danger size=sm @click="removeElement(element._id)">
           <FontAwesomeIcon icon="trash"/>
         </b-button>
-        <AreaChart type=area :options="chartOptions" :series="series[element.source]" v-if="hasData"/>
+        <div v-if="element.display === 'Area chart'">
+          <ApexAreaChart :options="chartOptions" :series="series[element.source]" v-if="hasData" />
+        </div>
+        <div v-else-if="element.display === 'Gauge'">
+          <ApexGauge :series="series[element.source]" v-if="hasData" />
+        </div>
       </div>
     </b-card>
 
@@ -29,7 +34,8 @@ import ky from 'ky'
 import PouchDB from 'pouchdb-browser'
 import pouchdbFind from 'pouchdb-find'
 import config from '@/config'
-import AreaChart from '@/components/AreaChart'
+import ApexAreaChart from '@/components/AreaChart'
+import ApexGauge from '@/components/Gauge'
 import NewElementModal from '@/components/NewElementModal'
 import moment from 'moment'
 PouchDB.plugin(pouchdbFind)
@@ -37,7 +43,8 @@ PouchDB.plugin(pouchdbFind)
 export default {
   name: 'Device',
   components: {
-    AreaChart,
+    ApexAreaChart,
+    ApexGauge,
     NewElementModal
   },
   data () {
@@ -81,7 +88,14 @@ export default {
   methods: {
     async removeElement (id) {
       const db = this.db_
-      await db.remove(id)
+      console.log(id)
+      console.log(await db.remove(id))
+    },
+    displayTypes () {
+      return {
+        'Area chart': 'area',
+        'Gauge': 'gauge'
+      }
     }
   },
   async mounted () {
@@ -101,6 +115,7 @@ export default {
         }
       })
       this.elements_ = elements.docs
+      console.log(elements)
 
       this.db_ = db
 
